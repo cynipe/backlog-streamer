@@ -19,20 +19,6 @@ module Backlog
       end
     end
 
-    def to_s
-      (<<-MSG).gsub(/^ +/, '')
-        #{user}によって"#{key}: #{summary}"が#{type}されました。
-        https://#{space}.backlog.jp/view/#{key}
-
-        #{content}
-
-        #{"cc: @%s" % assigner if assigner}
-      MSG
-    end
-
-    def assigner
-      @content.scan(/\[ 担当者:([a-zA-Z0-9\-_]+) \]/).flatten.first
-    end
   end
 
   class API
@@ -52,6 +38,10 @@ module Backlog
       call('backlog.getTimeline').map do |event|
         TimelineEvent.new(space, event)
       end
+    end
+
+    def get_issue(key)
+      call('backlog.getIssue', key)
     end
 
     private

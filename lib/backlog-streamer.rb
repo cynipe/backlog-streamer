@@ -26,7 +26,7 @@ module Backlog
         unless updates.empty?
           @last_updated = updates.last.updated_on
           updates.each do |u|
-            notifier.notify(u)
+            notifier.notify(u, watchers(u))
             puts "update found: #{u.type} #{u.summary}"
             sleep 3
           end
@@ -58,6 +58,18 @@ module Backlog
         mem
       end
     end
+
+    def watchers(event)
+      return [] unless event.key
+      issue = api.get_issue(event.key)
+      return [] if issue.empty?
+
+      res = []
+      res << issue['created_user']['name'] unless issue['created_user']['name'] == event.user
+      res << issue['assigner']['name'] if issue['assigner']
+      res.uniq
+    end
+
   end
 end
 
