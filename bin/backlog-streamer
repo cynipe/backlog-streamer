@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+$:.unshift(File.dirname(__FILE__) + '/../lib')
+require 'backlog-streamer'
+require 'pathname'
+
+base_dir = Pathname.new(File.expand_path(File.dirname(__FILE__) + '/..'))
+Backlog::Streamer.spawn!(:working_dir => base_dir,
+                      :pid_file => base_dir + 'tmp/backlog-streamer.pid',
+                      :log_file => base_dir + 'log/backlog-streamer.log',
+                      :sync_log => true,
+                      :singleton => true)
