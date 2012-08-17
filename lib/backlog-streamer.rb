@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 require 'daemon_spawn'
 require 'yaml'
 
