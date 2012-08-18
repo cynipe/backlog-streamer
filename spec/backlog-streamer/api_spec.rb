@@ -6,7 +6,7 @@ module Backlog
   describe API do
     include BacklogApiHelpers
 
-    let(:api) { API.new({space:'test', user:'cynipe', pass:'xxxx'}) }
+    let(:api) { API.new({:space => 'test', :user => 'cynipe', :pass => 'xxxx'}) }
 
     describe '#get_timeline' do
 
