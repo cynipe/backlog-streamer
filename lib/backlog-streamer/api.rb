@@ -8,10 +8,11 @@ module Backlog
 
     def initialize(space, event)
       @space = space
-      @type = event['type'] ? event['type']['name'] : nil
+      @type = event['type']['name']
       @content = event['content']
       @updated_on = Time.parse(event['updated_on'])
-      @user = event['user'] ? event['user']['name'] : nil
+      @user = event['user']['name']
+      # 今はIssueのイベントしかないので存在しないパターンはないはず
       if event['issue']
         @key = event['issue']['key']
         @summary = event['issue']['summary']
