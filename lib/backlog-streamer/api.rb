@@ -29,6 +29,9 @@ module Backlog
     attr_reader :space
 
     def initialize(config)
+      raise ArgumentError, "space must be specified." unless config[:space]
+      raise ArgumentError, "user must be specified." unless config[:user]
+      raise ArgumentError, "pass must be specified." unless config[:pass]
       @space = config[:space]
       @client = XMLRPC::Client.new_from_uri(BACKLOG_API % [space])
       @client.user = config[:user]
