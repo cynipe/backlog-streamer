@@ -21,6 +21,8 @@ GEM
       method_source (~> 0.7.1)
       slop (>= 2.4.4, < 3)
     rack (1.4.1)
+    reditor (0.0.4)
+      thor (>= 0.15.4)
     rspec (2.11.0)
       rspec-core (~> 2.11.0)
       rspec-expectations (~> 2.11.0)
@@ -31,6 +33,7 @@ GEM
     rspec-mocks (2.11.2)
     simple_oauth (0.1.9)
     slop (2.4.4)
+    thor (0.16.0)
     yammer (0.1.2)
       faraday (~> 0.6.1)
       faraday_middleware (~> 0.6.3)
@@ -45,5 +48,6 @@ PLATFORMS
 DEPENDENCIES
   daemon-spawn
   pry
+  reditor
   rspec
   yammer
