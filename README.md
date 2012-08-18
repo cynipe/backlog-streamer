@@ -1,6 +1,6 @@
 # Backlog Streamer
 
-[![Build Status](https://buildhive.cloudbees.com/job/cynipe/job/backlog-streamer/badge/icon)](https://buildhive.cloudbees.com/job/cynipe/job/backlog-streamer/) [![Build Status](https://secure.travis-ci.org/[cynipe]/[backlog-streamer].png)](http://travis-ci.org/cynipe/backlog-streamer)
+[![Buildhive Status](https://buildhive.cloudbees.com/job/cynipe/job/backlog-streamer/badge/icon)](https://buildhive.cloudbees.com/job/cynipe/job/backlog-streamer/) [![Travis Status](https://secure.travis-ci.org/cynipe/backlog-streamer.png)](http://travis-ci.org/cynipe/backlog-streamer)
 
 Backlogのタイムラインの更新をYammerにポストしてくれるDaemon
 
