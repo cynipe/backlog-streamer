@@ -22,8 +22,8 @@ module BacklogApiHelpers
 
   def prepare_timeline(fixture, status = 200)
     stub_request(:post, "https://cynipe:xxxx@test.backlog.jp/XML-RPC").
-        with(:body => "<?xml version=\"1.0\" ?><methodCall><methodName>backlog.getTimeline</methodName><params/></methodCall>\n",
-             :headers => {'Accept'=>'*/*', 'Connection'=>'keep-alive', 'Content-Length'=>'101', 'Content-Type'=>'text/xml; charset=utf-8', 'User-Agent'=>'XMLRPC::Client (Ruby 1.9.3)'}).
+         with(:body => "<?xml version=\"1.0\" ?><methodCall><methodName>backlog.getTimeline</methodName><params/></methodCall>\n",
+              :headers => {'Accept'=>'*/*', 'Connection'=>'keep-alive', 'Content-Length'=>'101', 'Content-Type'=>'text/xml; charset=utf-8'}).
         to_return(:status => status,
                   :body => timeline_response(fixture),
                   :headers => {'Content-Type'=>'text/xml; charset=utf-8' })
