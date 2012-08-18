@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 require 'yammer'
+require 'patch/faraday_utils_patch'
 
 module Backlog
   class Notifier
