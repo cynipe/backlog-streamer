@@ -5,6 +5,7 @@ gem 'daemon-spawn'
 
 group :test do
   gem 'rspec'
+  gem 'mocha'
   gem 'webmock'
 end
 
