@@ -8,7 +8,7 @@ module Backlog
 
   class Streamer < DaemonSpawn::Base
 
-    VERSION = "0.0.2"
+    VERSION = "0.0.3"
     STREAMER_ROOT = Pathname.new(File.expand_path(File.dirname(__FILE__) + '/..'))
 
     def initialize(args)
@@ -64,9 +64,12 @@ module Backlog
       issue = api.get_issue(event.key)
       return [] if issue.empty?
 
+      owner = issue['created_user']['name']
+      assigner = issue['assigner'] ? issue['assigner']['name'] : nil
+
       res = []
-      res << issue['created_user']['name'] unless issue['created_user']['name'] == event.user
-      res << issue['assigner']['name'] if issue['assigner']
+      res <<  owner unless owner == event.user
+      res <<  assigner if assigner and not assigner == event.user
       res.uniq
     end
 

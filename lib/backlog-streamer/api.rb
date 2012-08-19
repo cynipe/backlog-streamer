@@ -8,10 +8,11 @@ module Backlog
 
     def initialize(space, event)
       @space = space
-      @type = event['type'] ? event['type']['name'] : nil
+      @type = event['type']['name']
       @content = event['content']
       @updated_on = Time.parse(event['updated_on'])
-      @user = event['user'] ? event['user']['name'] : nil
+      @user = event['user']['name']
+      # 今はIssueのイベントしかないので存在しないパターンはないはず
       if event['issue']
         @key = event['issue']['key']
         @summary = event['issue']['summary']
@@ -28,6 +29,9 @@ module Backlog
     attr_reader :space
 
     def initialize(config)
+      raise ArgumentError, "space must be specified." unless config[:space]
+      raise ArgumentError, "user must be specified." unless config[:user]
+      raise ArgumentError, "pass must be specified." unless config[:pass]
       @space = config[:space]
       @client = XMLRPC::Client.new_from_uri(BACKLOG_API % [space])
       @client.user = config[:user]
