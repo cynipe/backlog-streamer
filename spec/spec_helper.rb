@@ -1,8 +1,13 @@
 $:.unshift(File.dirname(__FILE__) + '/../lib')
 require 'rspec'
 require 'pry'
+require 'mocha_standalone'
 require 'webmock/rspec'
 require 'backlog-streamer'
+
+RSpec.configure do |config|
+  config.mock_framework = :mocha
+end
 
 module FixtureHelpers
   def timeline_response(name)
