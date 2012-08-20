@@ -70,7 +70,7 @@ module Backlog
       res = []
       res <<  owner unless owner == event.user
       res <<  assigner if assigner and not assigner == event.user
-      res.uniq
+      config[:yammer][:notifies_to] ? res.uniq.select {|p| config[:yammer][:notifies_to].include? p } : res.uniq
     end
 
   end
