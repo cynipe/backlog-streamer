@@ -22,18 +22,21 @@ module Backlog
       let(:event)  { mock }
 
       it 'returns an empty array if event has no issue key' do
+        streamer.stubs(:config).returns({:yammer => {}})
         event.stubs(:key).returns(nil)
         api.expects(:get_issue).never
         streamer.send(:watchers, event).should == []
       end
 
       it 'returns an empty array if event has non-existing issue key' do
+        streamer.stubs(:config).returns({:yammer => {}})
         event.stubs(:key).returns('TEST-0')
         api.expects(:get_issue).returns({})
         streamer.send(:watchers, event).should == []
       end
 
       it 'returns owner only if issue has no assigner' do
+        streamer.stubs(:config).returns({:yammer => {}})
         api.expects(:get_issue).
             returns({ 'created_user' => { 'name' => 'owner' },
                       'assigner'     => nil })
@@ -43,6 +46,7 @@ module Backlog
       end
 
       it 'returns both owner and assigner if issue has an assigner' do
+        streamer.stubs(:config).returns({:yammer => {}})
         api.expects(:get_issue).
             returns({ 'created_user' => { 'name' => 'owner' },
                       'assigner'     => { 'name' => 'assigner'} })
@@ -52,6 +56,7 @@ module Backlog
       end
 
       it 'returns assigner only if owner is same as the event user' do
+        streamer.stubs(:config).returns({:yammer => {}})
         api.expects(:get_issue).
             returns({ 'created_user' => { 'name' => 'owner' },
                       'assigner'     => { 'name' => 'assigner' } })
@@ -61,6 +66,7 @@ module Backlog
       end
 
       it 'returns owner only if assigner is same as the event user' do
+        streamer.stubs(:config).returns({:yammer => {}})
         api.expects(:get_issue).
             returns({ 'created_user' => { 'name' => 'owner' },
                       'assigner'     => { 'name' => 'assigner' } })
@@ -70,9 +76,20 @@ module Backlog
       end
 
       it 'returns an empty array if both owner and assigner are same as the event user' do
+        streamer.stubs(:config).returns({:yammer => {}})
         api.expects(:get_issue).
             returns({ 'created_user' => { 'name' => 'cynipe' },
                       'assigner'     => { 'name' => 'cynipe' }})
+        event.stubs(:key).returns('TEST-1')
+        event.stubs(:user).returns('cynipe')
+        streamer.send(:watchers, event).should == []
+      end
+
+      it 'returns only people specified in notifies_to in config.yml if specified' do
+        streamer.stubs(:config).returns({:yammer => { :notifies_to => ['cynipe']}})
+        api.expects(:get_issue).
+            returns({ 'created_user' => { 'name' => 'owner' },
+                      'assigner'     => { 'name' => 'assigner' } })
         event.stubs(:key).returns('TEST-1')
         event.stubs(:user).returns('cynipe')
         streamer.send(:watchers, event).should == []
