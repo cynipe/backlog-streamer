@@ -27,8 +27,7 @@ module Backlog
           @last_updated = updates.last.updated_on
           updates.each do |u|
             notifier.notify(u, watchers(u))
-            puts "update found: #{u.type} #{u.summary}"
-            sleep 3
+            sleep 5
           end
         end
         sleep 10

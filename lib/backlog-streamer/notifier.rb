@@ -1,17 +1,33 @@
 # -*- encoding: utf-8 -*-
 require 'yammer'
 require 'patch/faraday_utils_patch'
+require 'pry'
 
 module Backlog
   class Notifier
 
+    attr_reader :yammer
     def initialize(config)
       @yammer = Yammer.new(config)
       raise ArgumentError, "Specified group does not exist: #{config[:group]}" unless group(config[:group])
     end
 
     def notify(event, watchers)
-      @yammer.update(format(event, watchers), :group_id => group.id)
+      origin = find_origin(event)
+      if origin
+        @yammer.update(format(event, watchers), :group_id => group.id, :replied_to_id => origin.id)
+        puts "update found(threaded): #{u.type} #{u.summary}"
+      else
+        @yammer.update(format(event, watchers), :group_id => group.id)
+        puts "update found(new): #{u.type} #{u.summary}"
+      end
+    end
+
+    def find_origin(event)
+      res = @yammer.search("#{event.key}: #{event.summary}")
+      puts "#{event.key}: #{event.summary}"
+      return nil if res['count'].messages == 0
+      res.messages.messages.select {|m| m.group_id == group.id }.sort_by {|m| m.created_at }.first
     end
 
     private
