@@ -49,9 +49,14 @@ module Backlog
     end
 
     private
-    def call(method, args = nil)
+    def call(method, args = nil, times = 5)
+      times -=1
       return @client.call(method) unless args
       @client.call(method, args)
+    rescue Timeout::Error => e
+      raise e if times == 0
+      puts "timeout retrying..."
+      retry
     end
   end
 end
