@@ -38,7 +38,7 @@ module Backlog
 
         #{event.content}
 
-        #{"cc: %s" % watchers.map {|w| "@#{w}" }.join(',') unless watchers.empty?}
+        #{"[登録者|担当者]: %s" % watchers.map {|w| w }.join(',') unless watchers.empty?}
       MSG
       puts "update found(new): #{event.type} #{event.summary}"
     end

@@ -85,15 +85,16 @@ module Backlog
         streamer.send(:watchers, event).should == []
       end
 
-      it 'returns only people specified in notifies_to in config.yml if specified' do
-        streamer.stubs(:config).returns({:yammer => { :notifies_to => ['cynipe']}})
+      it 'returns person names with @ as prefix if the person name specified in notifies_to in config.yml' do
+        streamer.stubs(:config).returns({:yammer => { :notifies_to => ['owner']}})
         api.expects(:get_issue).
             returns({ 'created_user' => { 'name' => 'owner' },
                       'assigner'     => { 'name' => 'assigner' } })
         event.stubs(:key).returns('TEST-1')
         event.stubs(:user).returns('cynipe')
-        streamer.send(:watchers, event).should == []
+        streamer.send(:watchers, event).should == ['@owner', 'assigner']
       end
+
     end
 
 
