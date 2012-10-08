@@ -8,7 +8,7 @@ module Backlog
 
   class Streamer < DaemonSpawn::Base
 
-    VERSION = "0.0.3"
+    VERSION = "0.0.4"
     STREAMER_ROOT = Pathname.new(File.expand_path(File.dirname(__FILE__) + '/..'))
 
     def initialize(args)
@@ -27,8 +27,7 @@ module Backlog
           @last_updated = updates.last.updated_on
           updates.each do |u|
             notifier.notify(u, watchers(u))
-            puts "update found: #{u.type} #{u.summary}"
-            sleep 3
+            sleep 5
           end
         end
         sleep 10
@@ -70,7 +69,7 @@ module Backlog
       res = []
       res <<  owner unless owner == event.user
       res <<  assigner if assigner and not assigner == event.user
-      res.uniq
+      config[:yammer][:notifies_to] ? res.uniq.select {|p| config[:yammer][:notifies_to].include? p } : res.uniq
     end
 
   end
