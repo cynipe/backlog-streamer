@@ -7,3 +7,7 @@ yammer:
   consumer_secret: xxxxxxxx
   oauth_token: xxxxxxxx
   oauth_token_secret: xxxxxxxx
+  notifies_to:
+    - user1
+    - user2
+    - user3
