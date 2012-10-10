@@ -40,7 +40,7 @@ module Backlog
 
     private
     def config
-      @config ||= to_symbolized_hash(YAML.load_file(STREAMER_ROOT + 'config/config.yml'))
+      @config ||= YAML.load_file(STREAMER_ROOT + 'config/config.yml')
     end
 
     def api
@@ -49,13 +49,6 @@ module Backlog
 
     def notifier
       @notifier ||= Notifier.new(config[:yammer])
-    end
-
-    def to_symbolized_hash(orig)
-      orig.reduce({}) do |mem, (key, val)|
-        mem[key.to_sym] = (val.kind_of? Hash) ? to_symbolized_hash(val) : val
-        mem
-      end
     end
 
     def watchers(event)

@@ -1,13 +1,13 @@
-backlog:
-  space: my-space
-  user: user
-  pass: xxxx
-yammer:
-  consumer_key: xxxxxxxxx
-  consumer_secret: xxxxxxxx
-  oauth_token: xxxxxxxx
-  oauth_token_secret: xxxxxxxx
-  notifies_to:
+:backlog:
+  :space: my-space
+  :user: user
+  :pass: xxxx
+:yammer:
+  :consumer_key: xxxxxxxxx
+  :consumer_secret: xxxxxxxx
+  :oauth_token: xxxxxxxx
+  :oauth_token_secret: xxxxxxxx
+  :notifies_to:
     - user1
     - user2
     - user3
