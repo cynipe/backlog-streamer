@@ -47,7 +47,10 @@ module Backlog
     end
 
     def notifiers
-      @notifiers ||= config[:notifiers].map {|config| Notifier.new(config) }
+      @notifiers ||= config[:notifiers].map do |config|
+        type = config.delete(:type)
+        Notifier.new(type, config)
+      end
     end
   end
 end
