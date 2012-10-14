@@ -9,14 +9,17 @@ module Backlog
     attr_reader :yammer
 
     def initialize(config)
+      @config = config
       @yammer = Yammer.new(config)
       raise ArgumentError, "Specified group does not exist: #{config[:group]}" unless group(config[:group])
     end
 
-    def notify(event, watchers)
-      return update(event, watchers) if event.type == '課題'
-      origin = find_origin(event)
-      origin.nil? ? update(event, watchers) : update_with_thread(event, watchers, origin)
+    def notify(event)
+      opts = { :group_id => group.id }
+      origin = find_origin(event) unless event.type == '課題'
+      opts.merge!({:replied_to_id => origin.id }) if origin
+      @yammer.update(build_message(event, origin.nil?), opts)
+      puts "update: #{event.type} #{event.summary}"
     end
 
     private
@@ -31,28 +34,27 @@ module Backlog
       res.messages.messages.select {|m| m.group_id == group.id }.sort_by {|m| m.created_at }.first
     end
 
-    def update(event, watchers)
-      @yammer.update((<<-MSG).gsub(/^ +/, ''), :group_id => group.id)
-        #{event.user}によって"#{event.key}: #{event.summary}"が#{event.type}されました。
-        https://#{event.space}.backlog.jp/view/#{event.key}
-
-        #{event.content}
-
-        #{"[登録者|担当者]: %s" % watchers.map {|w| w }.join(',') unless watchers.empty?}
-      MSG
-      puts "update found(new): #{event.type} #{event.summary}"
+    def decorate(name, event_user)
+      return nil unless name
+      # notifies_toが指定されていない場合は通知対象になる
+      notifies_to = @config[:notifies_to] ? @config[:notifies_to] : [name]
+      (name != event_user and notifies_to.include? name) ? "@#{name}" : name
     end
 
-    def update_with_thread(event, watchers, origin)
-        @yammer.update((<<-MSG).gsub(/^ +/, ''), :group_id => group.id, :replied_to_id => origin.id)
-          #{event.user}によって#{event.type}されました。
-
-          #{event.content}
-
-          #{"cc: %s" % watchers.map {|w| "@#{w}" }.join(',') unless watchers.empty?}
-        MSG
-        puts "update found(threaded): #{event.type} #{event.summary}"
+    def build_message(event, new)
+      msg = StringIO.new
+      if new
+        msg << "#{event.user}によって'#{event.key}: #{event.summary}'が#{event.type}されました。\n"
+        msg << "https://#{event.space}.backlog.jp/view/#{event.key}"
+      else
+        msg << "#{event.user}によって#{event.type}されました。\n"
+      end
+      msg << "\n#{event.content}\n"
+      msg << "[登録者]: #{decorate(event.owner, event.user)}\t"
+      msg << "[担当者]: #{decorate(event.assigner, event.user)}" if event.assigner
+      msg.string
     end
+
   end
 end
 

@@ -26,7 +26,7 @@ module Backlog
         unless updates.empty?
           @last_updated = updates.last.updated_on
           updates.each do |u|
-            notifier.notify(u, watchers(u))
+            notifier.notify(u)
             sleep 5
           end
         end
@@ -50,21 +50,6 @@ module Backlog
     def notifier
       @notifier ||= Notifier.new(config[:yammer])
     end
-
-    def watchers(event)
-      return [] unless event.key
-      issue = api.get_issue(event.key)
-      return [] if issue.empty?
-
-      owner = issue['created_user']['name']
-      assigner = issue['assigner'] ? issue['assigner']['name'] : nil
-
-      res = []
-      res <<  owner unless owner == event.user
-      res <<  assigner if assigner and not assigner == event.user
-      config[:yammer][:notifies_to] ? res.uniq.map {|p| config[:yammer][:notifies_to].include?(p) ? "@#{p}" : p } : res.uniq
-    end
-
   end
 end
 
