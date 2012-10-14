@@ -26,8 +26,7 @@ module Backlog
         unless updates.empty?
           @last_updated = updates.last.updated_on
           updates.each do |u|
-            notifier.notify(u)
-            sleep 5
+            notifiers.each {|n| n.notify(u) }
           end
         end
         sleep 10
@@ -47,8 +46,11 @@ module Backlog
       @api ||= API.new(config[:backlog])
     end
 
-    def notifier
-      @notifier ||= Notifier.new(config[:yammer])
+    def notifiers
+      @notifiers ||= config[:notifiers].map do |config|
+        type = config.delete(:type)
+        Notifier.new(type, config)
+      end
     end
   end
 end

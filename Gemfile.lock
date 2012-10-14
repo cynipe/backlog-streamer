@@ -12,11 +12,15 @@ GEM
       rack (>= 1.1.0, < 2)
     faraday_middleware (0.6.5)
       faraday (~> 0.6.0)
+    fluent-logger (0.4.3)
+      msgpack (~> 0.4.4)
+      yajl-ruby (~> 1.0)
     hashie (1.0.0)
     metaclass (0.0.1)
     method_source (0.7.1)
     mocha (0.12.3)
       metaclass (~> 0.0.1)
+    msgpack (0.4.7)
     multi_json (1.0.4)
     multi_xml (0.2.2)
     multipart-post (1.1.5)
@@ -42,6 +46,7 @@ GEM
     webmock (1.8.9)
       addressable (>= 2.2.7)
       crack (>= 0.1.7)
+    yajl-ruby (1.1.0)
     yammer (0.1.2)
       faraday (~> 0.6.1)
       faraday_middleware (~> 0.6.3)
@@ -55,6 +60,7 @@ PLATFORMS
 
 DEPENDENCIES
   daemon-spawn
+  fluent-logger
   mocha
   pry
   rake

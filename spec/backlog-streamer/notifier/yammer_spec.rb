@@ -1,19 +1,20 @@
 # -*- encoding: utf-8 -*-
 require 'spec_helper'
-require 'yammer'
+require 'backlog-streamer/notifier/yammer'
 
-module Backlog
-  describe Notifier do
+module Backlog::Notifier
+
+  describe Yammer do
 
     before do
       @yammer = stub_everything
-      Yammer.stubs(:new).returns(@yammer)
-      Notifier.any_instance.stubs(:group).returns(stub(:id => 1))
+      @yammer.stubs(:groups).returns([stub(:id => 1, :name => 'test')])
+      ::Yammer.stubs(:new).returns(@yammer)
     end
 
     describe "#notify" do
       let(:notifier) do
-        notifier = Notifier.new({})
+        notifier = Yammer.new({ :group => 'test' })
         notifier.stubs(:build_message)
         notifier
       end
@@ -49,7 +50,7 @@ module Backlog
 
     describe "#build_message" do
       context "新規投稿の場合" do
-        let(:notifier) { Notifier.new({}) }
+        let(:notifier) { Yammer.new({ :group => 'test' }) }
         let(:event) do
           stub(:type     => '更新',
                :space    => 'TEST',
@@ -74,7 +75,7 @@ module Backlog
 
       end
       context "スレッド投稿の場合" do
-        let(:notifier) { Notifier.new({}) }
+        let(:notifier) { Yammer.new({ :group => 'test' }) }
         let(:event) do
           stub(:type     => '更新',
                :space    => 'TEST',
@@ -99,7 +100,7 @@ module Backlog
       end
 
       context "作成者、担当者が更新者と同じ場合" do
-        let(:notifier) { Notifier.new({}) }
+        let(:notifier) { Yammer.new({ :group => 'test' }) }
         let(:event) do
           stub(:type     => '更新',
                :space    => 'TEST',
@@ -121,7 +122,7 @@ module Backlog
       end
 
       context "作成者、担当者が更新者とは別の場合" do
-        let(:notifier) { Notifier.new({}) }
+        let(:notifier) { Yammer.new({ :group => 'test' }) }
         let(:event) do
           stub(:type     => '更新',
                :space    => 'TEST',
@@ -143,7 +144,7 @@ module Backlog
       end
 
       context "通知対象者がnotifies_toに指定されていない場合" do
-        let(:notifier) { Notifier.new({:notifies_to => ['user2']}) }
+        let(:notifier) { Yammer.new({ :group => 'test', :notifies_to => ['user2']}) }
         let(:event) do
           stub(:type     => '更新',
                :space    => 'TEST',
