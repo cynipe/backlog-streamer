@@ -14,3 +14,8 @@
       - user1
       - user2
       - user3
+  -
+    :type: fluent
+    :host: localhost
+    :port: 24224
+    :tag: backlog.event

@@ -22,6 +22,9 @@ module Backlog
       end
     end
 
+    def to_hash
+      self.instance_variables.each_with_object({}) {|v, m| m[v.to_s.delete('@')] = self.instance_variable_get(v)}
+    end
   end
 
   class API
