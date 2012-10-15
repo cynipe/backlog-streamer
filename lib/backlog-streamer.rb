@@ -8,7 +8,7 @@ module Backlog
 
   class Streamer < DaemonSpawn::Base
 
-    VERSION = "0.0.4"
+    VERSION = "0.0.5"
     STREAMER_ROOT = Pathname.new(File.expand_path(File.dirname(__FILE__) + '/..'))
 
     def initialize(args)
@@ -26,8 +26,7 @@ module Backlog
         unless updates.empty?
           @last_updated = updates.last.updated_on
           updates.each do |u|
-            notifier.notify(u, watchers(u))
-            sleep 5
+            notifiers.each {|n| n.notify(u) }
           end
         end
         sleep 10
@@ -40,38 +39,19 @@ module Backlog
 
     private
     def config
-      @config ||= to_symbolized_hash(YAML.load_file(STREAMER_ROOT + 'config/config.yml'))
+      @config ||= YAML.load_file(STREAMER_ROOT + 'config/config.yml')
     end
 
     def api
       @api ||= API.new(config[:backlog])
     end
 
-    def notifier
-      @notifier ||= Notifier.new(config[:yammer])
-    end
-
-    def to_symbolized_hash(orig)
-      orig.reduce({}) do |mem, (key, val)|
-        mem[key.to_sym] = (val.kind_of? Hash) ? to_symbolized_hash(val) : val
-        mem
+    def notifiers
+      @notifiers ||= config[:notifiers].map do |config|
+        type = config.delete(:type)
+        Notifier.new(type, config)
       end
     end
-
-    def watchers(event)
-      return [] unless event.key
-      issue = api.get_issue(event.key)
-      return [] if issue.empty?
-
-      owner = issue['created_user']['name']
-      assigner = issue['assigner'] ? issue['assigner']['name'] : nil
-
-      res = []
-      res <<  owner unless owner == event.user
-      res <<  assigner if assigner and not assigner == event.user
-      config[:yammer][:notifies_to] ? res.uniq.select {|p| config[:yammer][:notifies_to].include? p } : res.uniq
-    end
-
   end
 end
 

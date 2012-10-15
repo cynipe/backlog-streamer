@@ -4,10 +4,12 @@ require 'time'
 
 module Backlog
   class TimelineEvent
-    attr_reader :space, :type, :content, :updated_on, :user, :key, :summary, :description
+    attr_reader :space, :type, :content, :updated_on, :user, :key, :summary, :description, :owner, :assigner
 
-    def initialize(space, event)
+    def initialize(space, owner, assigner, event)
       @space = space
+      @owner = owner
+      @assigner = assigner
       @type = event['type']['name']
       @content = event['content']
       @updated_on = Time.parse(event['updated_on'])
@@ -20,6 +22,9 @@ module Backlog
       end
     end
 
+    def to_hash
+      self.instance_variables.each_with_object({}) {|v, m| m[v.to_s.delete('@')] = self.instance_variable_get(v)}
+    end
   end
 
   class API
@@ -40,7 +45,11 @@ module Backlog
 
     def get_timeline
       call('backlog.getTimeline').map do |event|
-        TimelineEvent.new(space, event)
+        origin = get_issue(event['issue']['key'])
+        owner = origin['created_user']['name']
+        assigner = origin['assigner'] ? origin['assigner']['name'] : nil
+
+        TimelineEvent.new(space, owner, assigner, event)
       end
     end
 

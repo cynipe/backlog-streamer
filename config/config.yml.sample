@@ -1,13 +1,21 @@
-backlog:
-  space: my-space
-  user: user
-  pass: xxxx
-yammer:
-  consumer_key: xxxxxxxxx
-  consumer_secret: xxxxxxxx
-  oauth_token: xxxxxxxx
-  oauth_token_secret: xxxxxxxx
-  notifies_to:
-    - user1
-    - user2
-    - user3
+:backlog:
+  :space: my-space
+  :user: user
+  :pass: xxxx
+:notifiers:
+  -
+    :type: yammer
+    :consumer_key: xxxxx
+    :consumer_secret: xxxxxxx
+    :oauth_token: xxxxx
+    :oauth_token_secret: xxxxxx
+    :group: some-group
+    :notifies_to:
+      - user1
+      - user2
+      - user3
+  -
+    :type: fluent
+    :host: localhost
+    :port: 24224
+    :tag: backlog.event

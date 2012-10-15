@@ -10,6 +10,14 @@ module Backlog
 
     describe '#get_timeline' do
 
+      before do
+        API.any_instance.stubs(:get_issue).returns({
+          'created_user' => { 'name' => 'cynipe'},
+          'assigner'     => { 'name' => 'cynipe'}
+        })
+
+      end
+
       context 'when a new issue added' do
         subject do
           prepare_timeline('issue_added')
