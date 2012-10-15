@@ -6,6 +6,11 @@ Backlogのタイムラインの更新をYammerにポストしてくれるDaemon
 
 ## リリースノート
 
+### 0.0.5
+* plugin機構追加
+* fluent-plugin追加
+* 課題の作成者、担当者を通知の是非に関わらずに常に含めるようにした
+
 ### 0.0.4
 * config.ymlのyammer::notifies_toを設定することで通知する人を絞れるようにした([#7](https://github.com/cynipe/backlog-streamer/issues/7))
 * 同じ課題に対する更新の場合はスレッドに投稿するようにした([#5](https://github.com/cynipe/backlog-streamer/issues/5))
