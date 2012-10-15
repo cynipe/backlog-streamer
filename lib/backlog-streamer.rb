@@ -8,7 +8,7 @@ module Backlog
 
   class Streamer < DaemonSpawn::Base
 
-    VERSION = "0.0.4"
+    VERSION = "0.0.5"
     STREAMER_ROOT = Pathname.new(File.expand_path(File.dirname(__FILE__) + '/..'))
 
     def initialize(args)
